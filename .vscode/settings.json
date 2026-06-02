@@ -1,7 +1,0 @@
-{
-    "workbench.colorTheme": "Dark Modern",
-    "terminal.integrated.defaultProfile.windows": "Command Prompt",
-    "terminal.integrated.env.windows": {
-        "PATH": "C:\\Users\\vinni\\anaconda3;C:\\Users\\vinni\\anaconda3\\Scripts;C:\\Users\\vinni\\anaconda3\\condabin;${env:PATH}"
-    }
-}
