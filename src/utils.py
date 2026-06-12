@@ -6,6 +6,9 @@ import dill
 from src.exception import CustomException
 
 def save_object(file_path, obj):
+    '''
+    Saves fitted preprocessor to be tested on further data to be refined, scaled, and encoded
+    '''
     try:
         dir_path = os.path.dirname(file_path)
 
