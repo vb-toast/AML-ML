@@ -58,3 +58,14 @@ def evaluate_models(x_train, y_train, x_test, y_test, models, param):
 
     except Exception as e:
         raise CustomException(e, sys)
+    
+def load_object(file_path):
+    '''
+    opens the saved pkl file in read by mode, and loads the file
+    '''
+    try:
+        with open(file_path, "rb") as file_obj:
+            return dill.load(file_obj)
+        
+    except Exception as e:
+        raise CustomException(e, sys)
