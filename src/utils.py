@@ -4,8 +4,9 @@ import pandas as pd
 import numpy as np
 import dill
 from src.exception import CustomException
-from sklearn.metrics import r2_score
-from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import average_precision_score
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from src.logger import logging
 
 def save_object(file_path, obj):
     '''
@@ -35,22 +36,27 @@ def evaluate_models(x_train, y_train, x_test, y_test, models, param):
             #model.fit(x_train, y_train) # Trains the model
 
             para = param[list(models.keys())[i]]
-
-            gs = GridSearchCV(model, para, cv = 3) #, n_jobs = n_jobs, verbose = verbose, refit = refit)
             
+            # use grid search on a more powerful computer
+            # gs = GridSearchCV(model, para, cv = 3, scoring = "average_precision", n_jobs = -1) # scoring optimizes for AUC-PR during grid search, n_jobs parallelizes acros cpu cores
+            
+            gs = RandomizedSearchCV(model, para, n_iter = 20, cv = 3, scoring = "average_precision", n_jobs = -1, random_state = 42) # only tests 20 random combinations per model
+
             gs.fit(x_train, y_train)
 
             model.set_params(**gs.best_params_)
 
             model.fit(x_train, y_train)
 
-            y_train_pred = model.predict(x_train)
+            logging.info(f"{list(models.keys())[i]} has finished training with AUC-PR: {test_model_score:.4f}")
 
-            y_test_pred = model.predict(x_test)
+            y_train_pred = model.predict_proba(x_train)
 
-            train_model_score = r2_score(y_train, y_train_pred)
+            y_test_pred = model.predict_proba(x_test)
 
-            test_model_score = r2_score(y_test, y_test_pred)
+            train_model_score = average_precision_score(y_train, y_train_pred)
+
+            test_model_score = average_precision_score(y_test, y_test_pred)
 
             report[list(models.keys())[i]] = test_model_score
         
