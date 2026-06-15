@@ -3,14 +3,12 @@ import sys
 from dataclasses import dataclass
 from catboost import CatBoostRegressor
 from sklearn.ensemble import(
-    AdaBoostRegressor,
-    GradientBoostingRegressor,
-    RandomForestRegressor
+    GradientBoostingClassifier,
+    RandomForestClassifier
 )
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBRegressor
 from src.exception import CustomException
 from src.logger import logging
@@ -33,16 +31,13 @@ class ModelTrainer:
                 test_array[:,:-1],
                 test_array[:,-1]
             )
-
-            models = {
-                "Random Forest": RandomForestRegressor(),
-                "Decision Tree": DecisionTreeRegressor(),
-                "Gradient Boosting": GradientBoostingRegressor(),
-                "Linear Regression": LinearRegression(),
-                "K-Neighbors Regressor": KNeighborsRegressor(),
+            #use regressor models to predict Is_Laundering, which is binary, either 0 - False, 1 - True
+            models = { 
+                "Random Forest": RandomForestClassifier(),
+                "Decision Tree": DecisionTreeClassifier(),
+                "Gradient Boosting": GradientBoostingClassifier(),
                 "XGBRegressor": XGBRegressor(),
                 "CatBoosting Regressor": CatBoostRegressor(verbose=False),
-                "AdaBoost Regressor": AdaBoostRegressor()
             } 
             
             params = {
